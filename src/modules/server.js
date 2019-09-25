@@ -11,6 +11,7 @@ const { Config } = require('node-json-db/dist/lib/JsonDBConfig');
  * Import own packages
  */
 const log = require("./logger");
+const stringUtils = require('../utils/Strings');
 
 class server {
     /**
@@ -109,7 +110,39 @@ class server {
                     id
                 });
             } else {
-                res.status(401).json({
+                res.status(400).json({
+                    error: "Missing Body"
+                });
+            }
+        });
+
+        this.app.post('/remove', (req, res) => {
+            log.debug(`[WEB][/remove] ${JSON.stringify(req.body)}`);
+
+            if(req.body.project && req.body.id) {
+
+                if(this.db.getData("/projects").includes(req.body.project)) {
+                    const patches = this.db.getData(`/patches/${req.body.project}`);
+                    const patchIndex = stringUtils.getIndexFromPatchId(patches, req.body.id);
+
+                    if(patchIndex !== null) {
+                        this.db.delete(`/patches/${req.body.project}[${patchIndex}]`);
+
+                        res.status(200).json({
+                            success: "OK"
+                        });
+                    } else {
+                        res.status(400).json({
+                            error: "Patch not found!"
+                        });
+                    }
+                } else {
+                    res.status(400).json({
+                        error: "Project not found!"
+                    });
+                }
+            } else {
+                res.status(400).json({
                     error: "Missing Body"
                 });
             }
