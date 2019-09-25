@@ -2,6 +2,7 @@
  * Import base packages
  */
 const express = require('express');
+const bodyParser = require('body-parser');
 const { JsonDB } = require('node-json-db');
 const { Config } = require('node-json-db/dist/lib/JsonDBConfig');
 
@@ -41,6 +42,12 @@ class server {
         this.app.enable('trust proxy');
 
         /**
+         * Configure app to use bodyParser()
+         */
+        this.app.use(bodyParser.urlencoded({extended: true}));
+        this.app.use(bodyParser.json());
+
+        /**
          * Request logger
          */
         this.app.use((req, res, next) => {
@@ -75,6 +82,14 @@ class server {
             }
 
             res.json(projects);
+        });
+
+        this.app.post('/add', (req, res) => {
+            console.log('req.body', req.body);
+
+            res.status(201).json({
+                success: "OK"
+            })
         });
 
         /**
