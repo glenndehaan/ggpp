@@ -15,6 +15,11 @@
   "author": "Glenn de Haan",
   "license": "MIT",
   "eslintConfig": {
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "module"
+    },
     "env": {
       "node": true
     },
@@ -34,10 +39,12 @@
     ]
   },
   "dependencies": {
+    "commander": "^3.0.1",
     "pkg": "^4.4.0",
     "rimraf": "^3.0.0"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.3",
     "eslint": "^6.4.0",
     "nodemon": "^1.19.2"
   }
