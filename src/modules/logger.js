@@ -14,7 +14,7 @@ module.exports = {
      * @param message
      */
     debug: (message) => {
-        if(global.debug) {
+        if (global.debug) {
             console.log(message.yellow);
         }
     }

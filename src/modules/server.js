@@ -4,8 +4,8 @@
 const uuidv4 = require('uuid/v4');
 const express = require('express');
 const bodyParser = require('body-parser');
-const { JsonDB } = require('node-json-db');
-const { Config } = require('node-json-db/dist/lib/JsonDBConfig');
+const {JsonDB} = require('node-json-db');
+const {Config} = require('node-json-db/dist/lib/JsonDBConfig');
 
 /**
  * Import own packages
@@ -27,7 +27,7 @@ class server {
         /**
          * Check if we need to initialize the database
          */
-        if(Object.keys(this.db.getData("/")).length === 0) {
+        if (Object.keys(this.db.getData("/")).length === 0) {
             log.info("[DB] Initialized...".green);
             this.db.push("/projects", []);
             this.db.push("/patches", {});
@@ -63,7 +63,7 @@ class server {
         this.app.get(`/patch/:project`, (req, res) => {
             const projects = this.db.getData("/projects");
 
-            if(projects.includes(req.params.project)) {
+            if (projects.includes(req.params.project)) {
                 res.json({
                     project: req.params.project,
                     patches: this.db.getData(`/patches/${req.params.project}`)
@@ -79,7 +79,7 @@ class server {
             const dbProjects = this.db.getData("/projects");
             const projects = [];
 
-            for(let item = 0; item < dbProjects.length; item++) {
+            for (let item = 0; item < dbProjects.length; item++) {
                 projects.push({
                     project: dbProjects[item],
                     url: `${req.protocol}://${req.headers.host}/patch/${dbProjects[item]}`
@@ -92,10 +92,10 @@ class server {
         this.app.post('/add', (req, res) => {
             log.debug(`[WEB][/add] ${JSON.stringify(req.body)}`);
 
-            if(req.body.project && req.body.description && req.body.patch) {
+            if (req.body.project && req.body.description && req.body.patch) {
                 const id = uuidv4();
 
-                if(!this.db.getData("/projects").includes(req.body.project)) {
+                if (!this.db.getData("/projects").includes(req.body.project)) {
                     this.db.push("/projects[]", req.body.project);
                 }
 
@@ -119,13 +119,12 @@ class server {
         this.app.post('/remove', (req, res) => {
             log.debug(`[WEB][/remove] ${JSON.stringify(req.body)}`);
 
-            if(req.body.project && req.body.id) {
-
-                if(this.db.getData("/projects").includes(req.body.project)) {
+            if (req.body.project && req.body.id) {
+                if (this.db.getData("/projects").includes(req.body.project)) {
                     const patches = this.db.getData(`/patches/${req.body.project}`);
                     const patchIndex = stringUtils.getIndexFromPatchId(patches, req.body.id);
 
-                    if(patchIndex !== null) {
+                    if (patchIndex !== null) {
                         this.db.delete(`/patches/${req.body.project}[${patchIndex}]`);
 
                         res.status(200).json({

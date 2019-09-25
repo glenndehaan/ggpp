@@ -85,7 +85,7 @@ global.debug = program.debug;
 /**
  * Check if we want to run the server or client
  */
-if(!global.subcommand) {
+if (!global.subcommand) {
     if (program.server) {
         require('./modules/server').init();
     } else {
