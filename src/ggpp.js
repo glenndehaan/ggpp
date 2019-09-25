@@ -56,6 +56,14 @@ program
  * Setup application commands
  */
 program
+    .command('list')
+    .description('list all available patches for the current project configuration')
+    .action(() => {
+        global.subcommand = true;
+        require('./modules/client').list();
+    });
+
+program
     .command('create <description>')
     .description('creates a new patch and uploads that to the repository')
     .action((source) => {

@@ -32,6 +32,30 @@ class client {
     }
 
     /**
+     * List all available patches
+     */
+    list() {
+        fetch(`${this.config.ggpp.registry}/patch/${this.config.ggpp.project}`)
+            .then((res) => {
+                if (res.ok) {
+                    return res;
+                } else {
+                    log.info(`[ERROR] Getting patch information from registry (${this.config.ggpp.registry}/patch/${this.config.ggpp.project}). ${JSON.stringify(res)}`.red);
+                    process.exit(1);
+                }
+            })
+            .then(res => res.json())
+            .then((json) => {
+                log.info(`${json.patches.length} patch(es) are available for project: ${this.config.ggpp.project}`.green);
+
+                for(let item = 0; item < json.patches.length; item++) {
+                    const patch = json.patches[item];
+                    log.info(`(${patch.id})(${patch.username}): ${patch.description}`);
+                }
+            });
+    }
+
+    /**
      * Patches the current project
      */
     patch() {
