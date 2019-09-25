@@ -52,16 +52,26 @@ class client {
                 for (let item = 0; item < json.patches.length; item++) {
                     taskList.push({
                         title: `Applying patch (${json.patches[item].id}): ${json.patches[item].description}`,
-                        task: (ctx, task) => new Promise(resolve => {
-                            if (item === 1) {
+                        task: (ctx, task) => new Promise((resolve, reject) => {
+                            if (item > 1) {
                                 task.skip('Patch already applied!');
                                 resolve();
                                 return;
                             }
 
-                            setTimeout(() => {
-                                resolve('OK');
-                            }, 2000);
+                            fs.writeFileSync(`${process.cwd()}/temp.patch`, json.patches[item].patch);
+
+                            this.git.raw([
+                                'apply',
+                                `${process.cwd()}/temp.patch`
+                            ], (err, result) => {
+                                console.log('err', err);
+                                console.log('result', result);
+                            });
+
+                            // setTimeout(() => {
+                            //     resolve('OK');
+                            // }, 2000);
                         })
                     })
                 }
