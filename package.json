@@ -1,0 +1,44 @@
+{
+  "name": "ggpp",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "clean": "rimraf ./build",
+    "start": "npm run clean && npm run lint && node ./src/ggpp.js",
+    "dev": "npm run clean && npm run lint && nodemon --watch ./src ./src/ggpp.js",
+    "build": "npm run clean && npm run lint && pkg ./src/ggpp.js --targets node8-linux-x64,node8-macos-x64,node8-win-x64 --out-path ./build",
+    "lint": "eslint -c ./package.json ./"
+  },
+  "engines": {
+    "node": "^8.0.0"
+  },
+  "author": "Glenn de Haan",
+  "license": "MIT",
+  "eslintConfig": {
+    "env": {
+      "node": true
+    },
+    "rules": {
+      "no-console": 0,
+      "comma-dangle": [
+        "error",
+        "never"
+      ],
+      "indent": [
+        "error",
+        4
+      ]
+    },
+    "extends": [
+      "eslint:recommended"
+    ]
+  },
+  "dependencies": {
+    "pkg": "^4.4.0",
+    "rimraf": "^3.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "nodemon": "^1.19.2"
+  }
+}
