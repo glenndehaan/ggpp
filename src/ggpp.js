@@ -10,27 +10,9 @@ const program = require('commander');
 const log = require('./modules/logger');
 
 /**
- * Set program version
+ * Setup globals
  */
-program.version('0.0.1');
-
-/**
- * Set program options
- */
-program
-    .option('-s, --server', 'starts the registry server')
-    .option('-d, --debug', 'output debugging information');
-
-/**
- * Let commander handle process arguments
- */
-program.parse(process.argv);
-
-/**
- * Set globals
- */
-global.program = program;
-global.debug = program.debug;
+global.subcommand = false;
 
 /**
  * Output logo
@@ -59,10 +41,54 @@ log.info('');
 log.debug('Warning!!! | Application runs in debug mode! | Warning!!!');
 
 /**
+ * Set program version
+ */
+program.version('0.0.1');
+
+/**
+ * Set program options
+ */
+program
+    .option('-s, --server', 'starts the registry server')
+    .option('-d, --debug', 'output debugging information');
+
+/**
+ * Setup application commands
+ */
+program
+    .command('create <description>')
+    .description('creates a new patch and uploads that to the repository')
+    .action((source) => {
+        global.subcommand = true;
+        require('./modules/client').create(source);
+    });
+
+program
+    .command('delete <id>')
+    .description('removes a patch from the repository')
+    .action((source) => {
+        global.subcommand = true;
+        require('./modules/client').remove(source);
+    });
+
+/**
+ * Let commander handle process arguments
+ */
+program.parse(process.argv);
+
+/**
+ * Set globals
+ */
+global.program = program;
+global.debug = program.debug;
+
+/**
  * Check if we want to run the server or client
  */
-if(program.server) {
-    require('./modules/server').init();
-} else {
-    log.info('Run client!');
+if(!global.subcommand) {
+    if (program.server) {
+        require('./modules/server').init();
+    } else {
+        require('./modules/client').patch();
+    }
 }

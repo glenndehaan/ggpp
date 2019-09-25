@@ -1,0 +1,6 @@
+; Define GGPP Standard
+version = 1
+
+[ggpp]
+registry = http://localhost:5678
+project = install_package_2019
