@@ -39,7 +39,10 @@
     ]
   },
   "dependencies": {
+    "colors": "^1.4.0",
     "commander": "^3.0.1",
+    "express": "^4.17.1",
+    "node-json-db": "^1.0.1",
     "pkg": "^4.4.0",
     "rimraf": "^3.0.0"
   },

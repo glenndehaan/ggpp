@@ -1,4 +1,13 @@
+/**
+ * Import vendor modules
+ */
+require('colors');
 const program = require('commander');
+
+/**
+ * Import own modules
+ */
+const log = require('./modules/logger');
 
 /**
  * Set program version
@@ -18,10 +27,21 @@ program
 program.parse(process.argv);
 
 /**
+ * Set globals
+ */
+global.program = program;
+global.debug = program.debug;
+
+/**
+ * Output debug message
+ */
+log.debug('Warning!!! | Application runs in debug mode! | Warning!!!'.yellow);
+
+/**
  * Check if we want to run the server or client
  */
 if(program.server) {
-    console.log('Run server!');
+    require('./modules/server').init();
 } else {
-    console.log('Run client!');
+    log.info('Run client!');
 }
