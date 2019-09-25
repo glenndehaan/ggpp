@@ -51,7 +51,7 @@ class client {
 
                 for (let item = 0; item < json.patches.length; item++) {
                     taskList.push({
-                        title: `Applying patch (${json.patches[item].id}): ${json.patches[item].description}`,
+                        title: `Applying patch (${json.patches[item].id})(${json.patches[item].username}): ${json.patches[item].description}`,
                         task: (ctx, task) => new Promise((resolve, reject) => {
                             fs.writeFileSync(`${process.cwd()}/temp.patch`, json.patches[item].patch);
 
