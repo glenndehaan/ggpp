@@ -15,7 +15,7 @@ module.exports = {
      */
     debug: (message) => {
         if(global.debug) {
-            console.log(message);
+            console.log(message.yellow);
         }
     }
 };

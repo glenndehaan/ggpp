@@ -33,11 +33,6 @@ global.program = program;
 global.debug = program.debug;
 
 /**
- * Output debug message
- */
-log.debug('Warning!!! | Application runs in debug mode! | Warning!!!'.yellow);
-
-/**
  * Output logo
  */
 log.info('GGGGGGGGGGGGG        GGGGGGGGGGGGGPPPPPPPPPPPPPPPPP   PPPPPPPPPPPPPPPPP           ');
@@ -57,6 +52,11 @@ log.info('GG:::::::::::::::G   GG:::::::::::::::GP::::::::P          P::::::::P 
 log.info('GGG::::::GGG:::G     GGG::::::GGG:::GP::::::::P          P::::::::P               ');
 log.info('GGGGGG   GGGG        GGGGGG   GGGGPPPPPPPPPP          PPPPPPPPPP                  ');
 log.info('');
+
+/**
+ * Output debug message
+ */
+log.debug('Warning!!! | Application runs in debug mode! | Warning!!!');
 
 /**
  * Check if we want to run the server or client

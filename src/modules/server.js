@@ -1,6 +1,7 @@
 /**
  * Import base packages
  */
+const uuidv4 = require('uuid/v4');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { JsonDB } = require('node-json-db');
@@ -51,24 +52,27 @@ class server {
          * Request logger
          */
         this.app.use((req, res, next) => {
-            log.debug(`[WEB][REQUEST](${req.method}): ${req.originalUrl}`.yellow);
+            log.debug(`[WEB][REQUEST](${req.method}): ${req.originalUrl}`);
             next();
         });
 
         /**
          * Configure routes
          */
-        const projects = this.db.getData("/projects");
-        for(let item = 0; item < projects.length; item++) {
-            const project = projects[item];
+        this.app.get(`/patch/:project`, (req, res) => {
+            const projects = this.db.getData("/projects");
 
-            this.app.get(`/patch/${project}`, (req, res) => {
+            if(projects.includes(req.params.project)) {
                 res.json({
-                    project,
-                    patches: this.db.getData(`/patches/${project}`)
+                    project: req.params.project,
+                    patches: this.db.getData(`/patches/${req.params.project}`)
                 });
-            });
-        }
+            } else {
+                res.status(404).json({
+                    error: 'Not Found!'
+                });
+            }
+        });
 
         this.app.get('/', (req, res) => {
             const dbProjects = this.db.getData("/projects");
@@ -85,11 +89,30 @@ class server {
         });
 
         this.app.post('/add', (req, res) => {
-            console.log('req.body', req.body);
+            log.debug(`[WEB][/add] ${JSON.stringify(req.body)}`);
 
-            res.status(201).json({
-                success: "OK"
-            })
+            if(req.body.project && req.body.description && req.body.patch) {
+                const id = uuidv4();
+
+                if(!this.db.getData("/projects").includes(req.body.project)) {
+                    this.db.push("/projects[]", req.body.project);
+                }
+
+                this.db.push(`/patches/${req.body.project}[]`, {
+                    id,
+                    description: req.body.description,
+                    patch: req.body.patch
+                });
+
+                res.status(201).json({
+                    success: "OK",
+                    id
+                });
+            } else {
+                res.status(401).json({
+                    error: "Missing Body"
+                });
+            }
         });
 
         /**

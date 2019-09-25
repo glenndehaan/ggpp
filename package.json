@@ -45,7 +45,8 @@
     "express": "^4.17.1",
     "node-json-db": "^1.0.1",
     "pkg": "^4.4.0",
-    "rimraf": "^3.0.0"
+    "rimraf": "^3.0.0",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
