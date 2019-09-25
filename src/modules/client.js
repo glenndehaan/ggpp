@@ -53,25 +53,26 @@ class client {
                     taskList.push({
                         title: `Applying patch (${json.patches[item].id}): ${json.patches[item].description}`,
                         task: (ctx, task) => new Promise((resolve, reject) => {
-                            if (item > 1) {
-                                task.skip('Patch already applied!');
-                                resolve();
-                                return;
-                            }
-
                             fs.writeFileSync(`${process.cwd()}/temp.patch`, json.patches[item].patch);
 
                             this.git.raw([
                                 'apply',
                                 `${process.cwd()}/temp.patch`
-                            ], (err, result) => {
-                                console.log('err', err);
-                                console.log('result', result);
-                            });
+                            ], (err) => {
+                                fs.unlinkSync(`${process.cwd()}/temp.patch`);
+                                if(err) {
+                                    if(!err.includes('patch does not apply')) {
+                                        reject(err);
+                                        return;
+                                    } else {
+                                        task.skip('Patch already applied!');
+                                        resolve();
+                                        return;
+                                    }
+                                }
 
-                            // setTimeout(() => {
-                            //     resolve('OK');
-                            // }, 2000);
+                                resolve();
+                            });
                         })
                     })
                 }
