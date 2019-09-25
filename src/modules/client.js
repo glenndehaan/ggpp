@@ -62,7 +62,7 @@ class client {
                                 fs.unlinkSync(`${process.cwd()}/temp.patch`);
                                 if(err) {
                                     if(!err.includes('patch does not apply')) {
-                                        reject(err);
+                                        reject(new Error(err));
                                         return;
                                     } else {
                                         task.skip('Patch already applied!');
@@ -77,9 +77,10 @@ class client {
                     })
                 }
 
-                const tasks = new Listr(taskList);
-                tasks.run().catch(err => {
-                    log.info(JSON.stringify(err).red);
+                const tasks = new Listr(taskList, {
+                    exitOnError: false
+                });
+                tasks.run().catch(() => {
                     process.exit(1);
                 });
             });
