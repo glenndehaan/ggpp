@@ -60,8 +60,8 @@ class client {
                                 `${process.cwd()}/temp.patch`
                             ], (err) => {
                                 fs.unlinkSync(`${process.cwd()}/temp.patch`);
-                                if(err) {
-                                    if(!err.includes('patch does not apply')) {
+                                if (err) {
+                                    if (!err.includes('patch does not apply')) {
                                         reject(new Error(err));
                                         return;
                                     } else {
@@ -93,7 +93,7 @@ class client {
      */
     create(description) {
         this.git.diffSummary((err, result) => {
-            if(err) {
+            if (err) {
                 log.info(err.red);
                 process.exit(1);
                 return;
@@ -111,35 +111,40 @@ class client {
                 userWantsToContinue = readlineSync.question('Are you sure you want to include all files above in the patch (y/n): ');
             }
 
-            if(userWantsToContinue === "n") {
+            if (userWantsToContinue === "n") {
                 process.exit(0);
                 return;
             }
 
             this.git.diff((err, result) => {
-                if(err) {
+                if (err) {
                     log.info(err.red);
                     process.exit(1);
                     return;
                 }
 
-                fetch(`${this.config.ggpp.registry}/add`, {
-                    method: 'POST',
-                    body: JSON.stringify({project: this.config.ggpp.project, description, patch: result}),
-                    headers: {'Content-Type': 'application/json'}
-                })
-                    .then((res) => {
-                        if (res.ok) {
-                            return res;
-                        } else {
-                            log.info(`[ERROR] Uploading patch to registry (${this.config.ggpp.registry}/add). ${JSON.stringify(res)}`.red);
-                            process.exit(1);
-                        }
+                this.git.raw([
+                    'config',
+                    'user.name'
+                ], (err, username) => {
+                    fetch(`${this.config.ggpp.registry}/add`, {
+                        method: 'POST',
+                        body: JSON.stringify({project: this.config.ggpp.project, description, username: username.replace(/(\r\n|\n|\r)/gm,""), patch: result}),
+                        headers: {'Content-Type': 'application/json'}
                     })
-                    .then((res) => res.json())
-                    .then((json) => {
-                        log.info(`Patch ${json.id} created!!`.green);
-                    });
+                        .then((res) => {
+                            if (res.ok) {
+                                return res;
+                            } else {
+                                log.info(`[ERROR] Uploading patch to registry (${this.config.ggpp.registry}/add). ${JSON.stringify(res)}`.red);
+                                process.exit(1);
+                            }
+                        })
+                        .then((res) => res.json())
+                        .then((json) => {
+                            log.info(`Patch ${json.id} created!!`.green);
+                        });
+                });
             });
         });
     }

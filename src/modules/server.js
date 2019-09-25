@@ -92,7 +92,7 @@ class server {
         this.app.post('/add', (req, res) => {
             log.debug(`[WEB][/add] ${JSON.stringify(req.body)}`);
 
-            if (req.body.project && req.body.description && req.body.patch) {
+            if (req.body.project && req.body.username && req.body.description && req.body.patch) {
                 const id = uuidv4();
 
                 if (!this.db.getData("/projects").includes(req.body.project)) {
@@ -101,6 +101,7 @@ class server {
 
                 this.db.push(`/patches/${req.body.project}[]`, {
                     id,
+                    username: req.body.username,
                     description: req.body.description,
                     patch: req.body.patch
                 });
