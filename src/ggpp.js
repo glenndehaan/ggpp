@@ -71,7 +71,7 @@ const run = async () => {
         .description('initializes a project configuration within the current directory')
         .action(() => {
             global.subcommand = true;
-            require('./modules/client').init();
+            require('./modules/config').init();
         });
 
     program
