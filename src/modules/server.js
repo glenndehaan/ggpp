@@ -39,6 +39,13 @@ class server {
      */
     init() {
         /**
+         * Check if we are running secure
+         */
+        if (!global.program.auth) {
+            log.info('Warning! The registry is running without --auth parameter. This means everyone can create/remove patches from this registry!'.yellow);
+        }
+
+        /**
          * Trust proxy
          */
         this.app.enable('trust proxy');
@@ -55,6 +62,35 @@ class server {
         this.app.use((req, res, next) => {
             log.debug(`[WEB][REQUEST](${req.method}): ${req.originalUrl}`);
             next();
+        });
+
+        /**
+         * Authenticator
+         */
+        this.app.use((req, res, next) => {
+            if (global.program.auth) {
+                if (req.originalUrl === "/add" || req.originalUrl === "/remove") {
+                    if (req.headers["auth"]) {
+                        if (req.headers["auth"] === global.program.auth) {
+                            next();
+                        } else {
+                            res.status(403).json({
+                                error: 'Forbidden'
+                            });
+                            return;
+                        }
+                    } else {
+                        res.status(401).json({
+                            error: 'Unauthorized'
+                        });
+                        return;
+                    }
+                } else {
+                    next();
+                }
+            } else {
+                next();
+            }
         });
 
         /**

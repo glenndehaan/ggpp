@@ -25,11 +25,11 @@ class client {
         this.config = ini.parse(fs.readFileSync(`${process.cwd()}/.ggpp`, 'utf-8'));
         this.git = require('simple-git')(process.cwd());
 
-        if(global.program.registry){
+        if (global.program.registry) {
             this.config.ggpp.registry = global.program.registry;
         }
 
-        if(global.program.project){
+        if (global.program.project) {
             this.config.ggpp.project = global.program.project;
         }
 
@@ -37,6 +37,33 @@ class client {
             log.info(`Error: Incorrect config version. Current config version: ${this.config.version}`.red);
             process.exit(1);
         }
+    }
+
+    /**
+     * Initializes a project configuration
+     */
+    init() {
+        const registryUrl = readlineSync.question('Enter the registry URL (http://example.com): ');
+        const projectName = readlineSync.question('Enter the project name (example_project_2019): ');
+
+        const iniTemplate = `; Define GGPP Standard\nversion = 1\n\n[ggpp]\nregistry = ${registryUrl}\nproject = ${projectName}\n`;
+
+        log.info(`The following changes will be written to the config file: (${process.cwd()}/.ggpp)`.green);
+        log.info(iniTemplate);
+        log.info('');
+
+        let userWantsToContinue = readlineSync.question('All information correct? (y/n): ');
+        while (userWantsToContinue !== "y" && userWantsToContinue !== "n") {
+            userWantsToContinue = readlineSync.question('All information correct? (y/n): ');
+        }
+
+        if (userWantsToContinue === "n") {
+            process.exit(0);
+            return;
+        }
+
+        fs.writeFileSync(`${process.cwd()}/.ggpp`, iniTemplate);
+        log.info(`Config created!`.green);
     }
 
     /**
@@ -56,7 +83,7 @@ class client {
             .then((json) => {
                 log.info(`${json.patches.length} patch(es) are available for project: ${this.config.ggpp.project}`.green);
 
-                for(let item = 0; item < json.patches.length; item++) {
+                for (let item = 0; item < json.patches.length; item++) {
                     const patch = json.patches[item];
                     log.info(`(${patch.id})(${patch.username}): ${patch.description}`);
                 }
@@ -125,11 +152,61 @@ class client {
     }
 
     /**
+     * Stores the patches locally
+     *
+     * @param id
+     */
+    download(id) {
+        fetch(`${this.config.ggpp.registry}/patch/${this.config.ggpp.project}`)
+            .then((res) => {
+                if (res.ok) {
+                    return res;
+                } else {
+                    log.info(`[ERROR] Getting patch information from registry (${this.config.ggpp.registry}/patch/${this.config.ggpp.project}). ${JSON.stringify(res)}`.red);
+                    process.exit(1);
+                }
+            })
+            .then(res => res.json())
+            .then((json) => {
+                log.info(`Storing patches to: ${process.cwd()}/.patches`.green);
+
+                if (!fs.existsSync(`${process.cwd()}/.patches`)) {
+                    fs.mkdirSync(`${process.cwd()}/.patches`);
+                }
+
+                for (let item = 0; item < json.patches.length; item++) {
+                    const patch = json.patches[item];
+
+                    if (id) {
+                        if (id === patch.id) {
+                            log.info(`Saving patch (${patch.id}): ${patch.description}`);
+                            fs.writeFileSync(`${process.cwd()}/.patches/${patch.description}.patch`, patch.patch);
+                        }
+                    } else {
+                        log.info(`Saving patch (${patch.id}): ${patch.description}`);
+                        fs.writeFileSync(`${process.cwd()}/.patches/${patch.description}.patch`, patch.patch);
+                    }
+                }
+            })
+            .catch((e) => {
+                log.info(`[ERROR] Getting patch information from registry (${this.config.ggpp.registry}/patch/${this.config.ggpp.project}). ${JSON.stringify(e)}`.red);
+            });
+    }
+
+    /**
      * Creates a patch and uploads it to the registry
      *
      * @param description
      */
     create(description) {
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+
+        if (global.program.auth) {
+            headers.auth = global.program.auth;
+        }
+
         this.git.diffSummary((err, result) => {
             if (err) {
                 log.info(err.red);
@@ -167,12 +244,23 @@ class client {
                 ], (err, username) => {
                     fetch(`${this.config.ggpp.registry}/add`, {
                         method: 'POST',
-                        body: JSON.stringify({project: this.config.ggpp.project, description, username: username.replace(/(\r\n|\n|\r)/gm,""), patch: result}),
-                        headers: {'Content-Type': 'application/json'}
+                        body: JSON.stringify({
+                            project: this.config.ggpp.project,
+                            description,
+                            username: username.replace(/(\r\n|\n|\r)/gm, ""),
+                            patch: result
+                        }),
+                        headers
                     })
                         .then((res) => {
                             if (res.ok) {
                                 return res;
+                            } else if (res.status === 401) {
+                                log.info(`[ERROR] This registry requires authorization! Use the --auth parameter to provide your code`.red);
+                                process.exit(1);
+                            } else if (res.status === 403) {
+                                log.info(`[ERROR] Authorization code incorrect!`.red);
+                                process.exit(1);
                             } else {
                                 log.info(`[ERROR] Uploading patch to registry (${this.config.ggpp.registry}/add). ${JSON.stringify(res)}`.red);
                                 process.exit(1);
@@ -196,14 +284,28 @@ class client {
      * @param id
      */
     remove(id) {
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+
+        if (global.program.auth) {
+            headers.auth = global.program.auth;
+        }
+
         fetch(`${this.config.ggpp.registry}/remove`, {
             method: 'POST',
             body: JSON.stringify({project: this.config.ggpp.project, id}),
-            headers: {'Content-Type': 'application/json'}
+            headers
         })
             .then((res) => {
                 if (res.ok) {
                     return res;
+                } else if (res.status === 401) {
+                    log.info(`[ERROR] This registry requires authorization! Use the --auth parameter to provide your code`.red);
+                    process.exit(1);
+                } else if (res.status === 403) {
+                    log.info(`[ERROR] Authorization code incorrect!`.red);
+                    process.exit(1);
                 } else {
                     log.info(`[ERROR] Removing patch from registry (${this.config.ggpp.registry}/remove) are you sure this patch exists in project ${this.config.ggpp.project}?. ${JSON.stringify(res)}`.red);
                     process.exit(1);

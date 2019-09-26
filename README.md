@@ -11,6 +11,11 @@ A simple GIT project patcher (Glenn GIT Project Patcher)
 - Listr
 - JsonDB
 
+## Why?
+Sometimes when you are working on larger packages it happens that something breaks that's used inside multiple projects.
+Now you could just copy/paste that fix all around... or use this.
+This application can creates the patch for you, uploads it to the repository. And other projects can then pull the patch.
+
 ## Usage
 ```
 _______  _______  _______  _______  
@@ -27,11 +32,14 @@ Options:
   -V, --version          output the version number
   --registry <registry>  sets a temporary registry for the current command
   --project <project>    sets a temporary project for the current command
+  --auth <code>          sets the authentication code for the server/sets the authentication code for uploading/deleting patches to the server
   -d, --debug            output debugging information
   -h, --help             output usage information
 
 Commands:
+  init                   initializes a project configuration within the current directory
   list                   list all available patches for the current project configuration
+  download [id]          downloads one or all patches for the current project
   create <description>   creates a new patch and uploads that to the repository
   delete <id>            removes a patch from the repository
   server                 starts the registry server

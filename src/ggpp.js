@@ -60,17 +60,34 @@ const run = async () => {
     program
         .option('--registry <registry>', 'sets a temporary registry for the current command')
         .option('--project <project>', 'sets a temporary project for the current command')
+        .option('--auth <code>', 'sets the authentication code for the server/sets the authentication code for uploading/deleting patches to the server')
         .option('-d, --debug', 'output debugging information');
 
     /**
      * Setup application commands
      */
     program
+        .command('init')
+        .description('initializes a project configuration within the current directory')
+        .action(() => {
+            global.subcommand = true;
+            require('./modules/client').init();
+        });
+
+    program
         .command('list')
         .description('list all available patches for the current project configuration')
         .action(() => {
             global.subcommand = true;
             require('./modules/client').list();
+        });
+
+    program
+        .command('download [id]')
+        .description('downloads one or all patches for the current project')
+        .action((source) => {
+            global.subcommand = true;
+            require('./modules/client').download(source);
         });
 
     program

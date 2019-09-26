@@ -1,7 +1,8 @@
 {
   "name": "ggpp",
-  "version": "1.0.1",
-  "description": "",
+  "version": "1.1.0",
+  "description": "A simple GIT project patcher (Glenn GIT Project Patcher)",
+  "private": true,
   "scripts": {
     "clean": "rimraf ./build",
     "start": "npm run clean && npm run lint && node ./src/ggpp.js",
