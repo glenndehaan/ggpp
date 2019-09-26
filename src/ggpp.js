@@ -43,7 +43,7 @@ log.debug('Warning!!! | Application runs in debug mode! | Warning!!!');
 /**
  * Set program version
  */
-program.version('0.0.1');
+program.version('0.1.1');
 
 /**
  * Set program options

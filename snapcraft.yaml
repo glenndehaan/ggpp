@@ -1,5 +1,5 @@
 name: ggpp
-version: 0.1.0
+version: 0.1.1
 summary: A simple GIT project patcher
 description: |
   A simple GIT project patcher.
@@ -11,7 +11,7 @@ grade: stable
 parts:
   ggpp:
     plugin: dump
-    source: https://github.com/glenndehaan/ggpp/releases/download/v$SNAPCRAFT_PROJECT_VERSION/ggpp-linux
+    source: https://github.com/glenndehaan/ggpp/releases/download/v$SNAPCRAFT_PROJECT_VERSION/ggpp-linux-snapcraft.tar.gz
 
 apps:
   ggpp:

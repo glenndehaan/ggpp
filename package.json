@@ -1,12 +1,12 @@
 {
   "name": "ggpp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "scripts": {
     "clean": "rimraf ./build",
     "start": "npm run clean && npm run lint && node ./src/ggpp.js",
     "dev": "npm run clean && npm run lint && nodemon --watch ./src ./src/ggpp.js",
-    "build": "npm run clean && npm run lint && pkg ./src/ggpp.js --targets node8-linux-x64,node8-macos-x64,node8-win-x64 --out-path ./build",
+    "build": "npm run clean && npm run lint && pkg ./src/ggpp.js --targets node8-linux-x64,node8-macos-x64,node8-win-x64 --out-path ./build && tar -czvf ./build/ggpp-linux-snapcraft.tar.gz ./build/ggpp-linux",
     "lint": "eslint -c ./package.json ./"
   },
   "engines": {
