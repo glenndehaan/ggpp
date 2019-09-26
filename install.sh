@@ -30,7 +30,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     chmod 755 /opt/ggpp/ggpp-linux
 
     # Link the binary to the /usr/bin path
-    ln -s /opt/ggpp/ggpp-linux /usr/bin/ggpp
+    ln -sf /opt/ggpp/ggpp-linux /usr/bin/ggpp
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Go into the temp dir
     cd /tmp
@@ -48,7 +48,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     chmod 755 /opt/ggpp/ggpp-linux
 
     # Link the binary to the /usr/bin path
-    ln -s /opt/ggpp/ggpp-macos /usr/bin/ggpp
+    ln -sf /opt/ggpp/ggpp-macos /usr/bin/ggpp
 else
     echo "Sorry this script isn't compatible with your system"
 fi
