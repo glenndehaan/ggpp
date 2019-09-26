@@ -1,5 +1,5 @@
 name: ggpp
-version: 0.1.2
+version: 0.1.3
 summary: A simple GIT project patcher
 description: |
   A simple GIT project patcher.
@@ -13,7 +13,21 @@ parts:
     plugin: dump
     source: https://github.com/glenndehaan/ggpp/releases/download/v$SNAPCRAFT_PROJECT_VERSION/ggpp-linux-snapcraft.tar.gz
 
+plugs:
+  config-files:
+    interface: system-files
+    write:
+      - /etc
+      - /home
+      - /opt
+      - /root
+      - /tmp
+      - /usr
+      - /var
+
 apps:
   ggpp:
     command: ggpp-linux
-    plugs: [network]
+    plugs:
+      - network
+      - config-files
