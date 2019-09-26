@@ -25,6 +25,14 @@ class client {
         this.config = ini.parse(fs.readFileSync(`${process.cwd()}/.ggpp`, 'utf-8'));
         this.git = require('simple-git')(process.cwd());
 
+        if(global.program.registry){
+            this.config.ggpp.registry = global.program.registry;
+        }
+
+        if(global.program.project){
+            this.config.ggpp.project = global.program.project;
+        }
+
         if (this.config.version !== '1') {
             log.info(`Error: Incorrect config version. Current config version: ${this.config.version}`.red);
             process.exit(1);
@@ -52,6 +60,9 @@ class client {
                     const patch = json.patches[item];
                     log.info(`(${patch.id})(${patch.username}): ${patch.description}`);
                 }
+            })
+            .catch((e) => {
+                log.info(`[ERROR] Getting patch information from registry (${this.config.ggpp.registry}/patch/${this.config.ggpp.project}). ${JSON.stringify(e)}`.red);
             });
     }
 
@@ -107,6 +118,9 @@ class client {
                 tasks.run().catch(() => {
                     process.exit(1);
                 });
+            })
+            .catch((e) => {
+                log.info(`[ERROR] Getting patch information from registry (${this.config.ggpp.registry}/patch/${this.config.ggpp.project}). ${JSON.stringify(e)}`.red);
             });
     }
 
@@ -167,6 +181,9 @@ class client {
                         .then((res) => res.json())
                         .then((json) => {
                             log.info(`Patch ${json.id} created!!`.green);
+                        })
+                        .catch((e) => {
+                            log.info(`[ERROR] Uploading patch to registry (${this.config.ggpp.registry}/add). ${JSON.stringify(e)}`.red);
                         });
                 });
             });
@@ -194,6 +211,9 @@ class client {
             })
             .then(() => {
                 log.info(`Patch ${id} removed!!`.green);
+            })
+            .catch((e) => {
+                log.info(`[ERROR] Removing patch from registry (${this.config.ggpp.registry}/remove) are you sure this patch exists in project ${this.config.ggpp.project}?. ${JSON.stringify(e)}`.red);
             });
     }
 }
