@@ -42,10 +42,10 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     mkdir -p /opt/ggpp
 
     # Move the binary to the installation directory
-    mv ./ggpp-linux /opt/ggpp/ggpp-macos
+    mv ./ggpp-macos /opt/ggpp/ggpp-macos
 
     # Make ggpp executable
-    chmod 755 /opt/ggpp/ggpp-linux
+    chmod 755 /opt/ggpp/ggpp-macos
 
     # Link the binary to the /usr/bin path
     ln -sf /opt/ggpp/ggpp-macos /usr/bin/ggpp
