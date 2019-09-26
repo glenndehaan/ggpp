@@ -50,7 +50,7 @@ const run = async () => {
     /**
      * Set program version
      */
-    program.version('1.0.0');
+    program.version('1.0.1');
 
     /**
      * Set program options
