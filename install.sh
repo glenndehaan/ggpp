@@ -26,6 +26,9 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     # Move the binary to the installation directory
     mv ./ggpp-linux /opt/ggpp/ggpp-linux
 
+    # Make ggpp executable
+    chmod 755 /opt/ggpp/ggpp-linux
+
     # Link the binary to the /usr/bin path
     ln -s /opt/ggpp/ggpp-linux /usr/bin/ggpp
 elif [[ "$OSTYPE" == "darwin"* ]]; then
@@ -40,6 +43,9 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 
     # Move the binary to the installation directory
     mv ./ggpp-linux /opt/ggpp/ggpp-macos
+
+    # Make ggpp executable
+    chmod 755 /opt/ggpp/ggpp-linux
 
     # Link the binary to the /usr/bin path
     ln -s /opt/ggpp/ggpp-macos /usr/bin/ggpp
