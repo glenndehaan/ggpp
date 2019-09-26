@@ -1,0 +1,19 @@
+name: ggpp
+version: 0.1.0
+summary: A simple GIT project patcher
+description: |
+  A simple GIT project patcher.
+  It's APT for patches.
+confinement: strict
+base: core18
+grade: stable
+
+parts:
+  ggpp:
+    plugin: dump
+    source: https://github.com/glenndehaan/ggpp/releases/download/v$SNAPCRAFT_PROJECT_VERSION/ggpp-linux
+
+apps:
+  ggpp:
+    command: ggpp
+    plugs: [network]

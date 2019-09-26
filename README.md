@@ -1,6 +1,6 @@
 # GGPP (Glenn GIT Project Patcher)
 
-Description
+A simple GIT project patcher (Glenn GIT Project Patcher)
 
 ## Structure
 - ES6 Javascript
@@ -10,7 +10,7 @@ Description
 - Run `npm ci` in the root folder
 - Run `npm start` in the root folder
 
-Then open up your favorite browser and go to http://localhost:3001/
+Then open up your favorite browser and go to http://localhost:5678/
 
 ## Build Usage
 - Install NodeJS 8.0 or higher.
