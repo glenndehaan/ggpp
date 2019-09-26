@@ -48,7 +48,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     chmod 755 /opt/ggpp/ggpp-macos
 
     # Link the binary to the /usr/bin path
-    ln -sf /opt/ggpp/ggpp-macos /usr/bin/ggpp
+    ln -sf /opt/ggpp/ggpp-macos /usr/local/bin/ggpp
 else
     echo "Sorry this script isn't compatible with your system"
 fi
