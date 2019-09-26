@@ -49,7 +49,6 @@ program.version('0.1.3');
  * Set program options
  */
 program
-    .option('-s, --server', 'starts the registry server')
     .option('-d, --debug', 'output debugging information');
 
 /**
@@ -79,6 +78,14 @@ program
         require('./modules/client').remove(source);
     });
 
+program
+    .command('server')
+    .description('starts the registry server')
+    .action(() => {
+        global.subcommand = true;
+        require('./modules/server').init();
+    });
+
 /**
  * Let commander handle process arguments
  */
@@ -94,9 +101,5 @@ global.debug = program.debug;
  * Check if we want to run the server or client
  */
 if (!global.subcommand) {
-    if (program.server) {
-        require('./modules/server').init();
-    } else {
-        require('./modules/client').patch();
-    }
+    require('./modules/client').patch();
 }
