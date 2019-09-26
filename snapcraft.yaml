@@ -1,5 +1,5 @@
 name: ggpp
-version: 0.1.1
+version: 0.1.2
 summary: A simple GIT project patcher
 description: |
   A simple GIT project patcher.
@@ -15,5 +15,5 @@ parts:
 
 apps:
   ggpp:
-    command: ggpp
+    command: ggpp-linux
     plugs: [network]
