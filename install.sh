@@ -18,7 +18,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     cd /tmp
 
     # Download the latest version
-    wget https://github.com/glenndehaan/ggpp/releases/latest/download/ggpp-linux
+    wget https://github.com/glenndehaan/ggpp/releases/latest/download/ggpp-linux -O ggpp-linux
 
     # Create the program dir
     mkdir -p /opt/ggpp
@@ -33,7 +33,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     cd /tmp
 
     # Download the latest version
-    wget https://github.com/glenndehaan/ggpp/releases/latest/download/ggpp-macos
+    wget https://github.com/glenndehaan/ggpp/releases/latest/download/ggpp-macos -O ggpp-macos
 
     # Create the program dir
     mkdir -p /opt/ggpp

@@ -40,6 +40,7 @@ Commands:
 ## Installation
 ### Linux / MacOS
 #### Automatic
+- Run this command `wget https://raw.githubusercontent.com/glenndehaan/ggpp/master/install.sh -O ggpp-install.sh && chmod 755 ggpp-install.sh && sudo bash ggpp-install.sh && rm ggpp-install.sh`
 
 #### Manual
 - Download the latest `ggpp-linux` or `ggpp-macos` from https://github.com/glenndehaan/ggpp/releases
