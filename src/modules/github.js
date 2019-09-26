@@ -27,7 +27,7 @@ module.exports = {
             })
             .then(res => res.json())
             .then((json) => {
-                if(json.tag_name !== `v${global.program.version}`) {
+                if(json.tag_name !== `v${global.version}`) {
                     log.info(`A new version of GGPP is available for download on GitHub: https://github.com/glenndehaan/ggpp/releases`.green);
                 }
             })

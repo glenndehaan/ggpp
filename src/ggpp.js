@@ -7,6 +7,7 @@ const program = require('commander');
 /**
  * Import own modules
  */
+const packageJson = require('../package.json');
 const log = require('./modules/logger');
 const github = require('./modules/github');
 
@@ -37,20 +38,21 @@ const run = async () => {
     log.debug('Warning!!! | Application runs in debug mode! | Warning!!!');
 
     /**
-     * Check for updates
-     */
-    await github.checkVersionUpdate();
-
-    /**
      * Set globals
      */
+    global.version = packageJson.version;
     global.program = program;
     global.debug = program.debug;
 
     /**
      * Set program version
      */
-    program.version('1.0.1');
+    program.version(packageJson.version);
+
+    /**
+     * Check for updates
+     */
+    await github.checkVersionUpdate();
 
     /**
      * Set program options
