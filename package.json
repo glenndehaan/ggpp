@@ -52,7 +52,7 @@
     "pkg": "^4.4.0",
     "readline-sync": "^1.4.10",
     "rimraf": "^3.0.0",
-    "simple-git": "^1.126.0",
+    "simple-git": "^3.5.0",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
